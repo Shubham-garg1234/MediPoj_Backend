@@ -1,0 +1,24 @@
+{
+  "name": "medipoj_backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cloudinary": "^1.41.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.2",
+    "node-fetch": "^3.3.2",
+    "nodemailer": "^6.9.6",
+    "pg": "^8.11.3",
+    "postgres": "^3.4.0",
+    "razorpay": "^2.9.2",
+    "socket.io": "^4.7.2"
+  }
+}
