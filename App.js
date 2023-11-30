@@ -54,10 +54,6 @@ io.on('connection', (socket) => {
 });
 
 
-
-
-
-
 // const dbConfig = {
 //   user: process.env.db_user,
 //   host: process.env.db_host,
@@ -70,7 +66,6 @@ const dbConfig = {
   connectionString: process.env.DATABASE_URL, // Use your environment variable for the database URL
   ssl: {
     rejectUnauthorized: false, // For testing purposes. In production, provide a CA certificate.
-    // ca: fs.readFileSync(path.join(__dirname, 'path/to/ca-certificate.pem')),
   },
 };
 
@@ -446,8 +441,8 @@ app.post("/addslot",(req,resp)=>{
     .connect()
     .then(() => {
       const query = {
-        text: 'Insert into slot values($1, $2, $3 ,$4)',
-        values: [userId,0,start,end]
+        text: 'Insert into slot (doctorid, status, stime, etime) values($1, $2, $3 ,$4);',
+        values: [userId,false,start,end]
       };
       return client.query(query);
     })
