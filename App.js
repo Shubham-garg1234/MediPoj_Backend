@@ -58,12 +58,20 @@ io.on('connection', (socket) => {
 
 
 
+// const dbConfig = {
+//   user: process.env.db_user,
+//   host: process.env.db_host,
+//   database: process.env.db_database,
+//   password: process.env.db_pwd,
+//   port: process.env.db_port,
+// };
+
 const dbConfig = {
-  user: process.env.db_user,
-  host: process.env.db_host,
-  database: process.env.db_database,
-  password: process.env.db_pwd,
-  port: process.env.db_port,
+  connectionString: process.env.DATABASE_URL, // Use your environment variable for the database URL
+  ssl: {
+    rejectUnauthorized: false, // For testing purposes. In production, provide a CA certificate.
+    // ca: fs.readFileSync(path.join(__dirname, 'path/to/ca-certificate.pem')),
+  },
 };
 
 // ----------->Check for login credentials  of patient
@@ -366,7 +374,7 @@ app.post("/getdetailsDoctor",(req,resp)=>{
     .connect()
     .then(() => {
       const query = {
-        text: 'Select email,dp_url,username,registration,qualification,exp,fees,start,"end" from verifieddoctor where userid=$1;',
+        text: 'Select email,dp_url,username,registration,qualification,exp,fees from verifieddoctor where userid=$1;',
         values: [userId]
       };
       return client.query(query);
@@ -385,8 +393,6 @@ app.post("/getdetailsDoctor",(req,resp)=>{
 app.post("/updateDoctor",(req,resp)=>{
   const qual=req.body.qual;
   const fee=req.body.fee;
-  const end='00:00:00';
-  const start='00:00:00';
   const exp=req.body.exp;
   const userId=req.body.userId;
   const client = new Client(dbConfig);
@@ -394,8 +400,8 @@ app.post("/updateDoctor",(req,resp)=>{
     .connect()
     .then(() => {
       const query = {
-        text: 'update verifiedDoctor set qualification=$1, exp=$2, start=$3, "end"=$4, fees=$5 Where userid=$6',
-        values: [qual,exp,start,end,fee,userId]
+        text: 'update verifiedDoctor set qualification=$1, exp=$2 fees=$3 Where userid=$6',
+        values: [qual,exp,fee,userId]
       };
       return client.query(query);
     })
@@ -527,8 +533,8 @@ app.post("/setpwd",(req,resp)=>{
       if(type=="D"){
         const registration=req.body.registration;
         const query = {
-          text: 'Insert into verifieddoctor values($1,$2,$3,$4,$5,$6,$7,$8,$9,$10);',
-          values: [userId,username,pwd,email,registration,0,0,'','00:00','00:00']
+          text: 'INSERT INTO verifieddoctor (userid, username, pwd, email, registration, exp, fees, qualification) VALUES ($1, $2, $3, $4, $5, $6, $7, $8);',
+          values: [userId,username,pwd,email,registration,0,0,'']
         };
         return client.query(query);
       }

@@ -2,13 +2,22 @@ const { Client } = require("pg");
 const dotenv = require('dotenv')
 dotenv.config({ path: './config.env' })
 
+
+// const dbConfig = {
+//     user: process.env.db_user,
+//     host: process.env.db_host,
+//     database: process.env.db_database,
+//     password: process.env.db_pwd,
+//     port: process.env.db_port,
+// };
+
 const dbConfig = {
-    user: process.env.db_user,
-    host: process.env.db_host,
-    database: process.env.db_database,
-    password: process.env.db_pwd,
-    port: process.env.db_port,
-};
+    connectionString: process.env.DATABASE_URL, // Use your environment variable for the database URL
+    ssl: {
+      rejectUnauthorized: false, // For testing purposes. In production, provide a CA certificate.
+      // ca: fs.readFileSync(path.join(__dirname, 'path/to/ca-certificate.pem')),
+    },
+  };
 
 const saltSimilarity = (saltList1, saltList2) => {
     const totalSalts = saltList1.length;
